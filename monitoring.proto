@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package mon;
+import "google/protobuf/empty.proto";
+
+// Disk
+service DiskMonitoring {
+    rpc GetBPS(google.protobuf.Empty) returns(AllDiskResponse) {};
+    rpc GetDiskBPS(DiskQ) returns (DiskResponse) {};
+
+    rpc GetIOPS(google.protobuf.Empty) returns (AllDiskResponse) {};
+    rpc GetDiskIOPS(DiskQ) returns (DiskResponse) {};
+    
+    rpc GetRequestSizeInBytesPerRead(google.protobuf.Empty) returns (AllDiskResponse) {};
+    rpc GetDiskRequestSizeInBytesPerRead(DiskQ) returns (DiskResponse) {};
+}
+
+message DiskValue {
+    int64 r = 1;
+    int64 w = 2;
+    int64 rw = 3;
+}
+
+message DiskResponse {
+    string name = 1;
+    DiskValue value = 2;
+}
+
+message AllDiskResponse {
+    repeated DiskResponse resp = 1;
+}
+
+message DiskQ {
+    string name = 1;
+}
+
+// Network
+service NetworkMonitoring {
+    rpc GetBytesPerSecond(google.protobuf.Empty) returns(AllIfaceResponses) {}
+    rpc GetIfaceBytesPerSecond(IfaceQ) returns(IfaceResponse) {}
+
+    rpc GetPacketsPerSecond(google.protobuf.Empty) returns(AllIfaceResponses) {}
+    rpc GetIfacePacketsPerSecond(IfaceQ) returns(IfaceResponse) {}
+}
+
+message IfaceQ{
+    string name = 1;
+}
+
+message IfaceValue {
+    int64 r = 1;
+    int64 w = 2;
+    int64 rw = 3;
+}
+
+message IfaceResponse{
+    string name = 1;
+    IfaceValue value = 2;
+}
+
+message AllIfaceResponses {
+    repeated IfaceResponse iface = 1;
+}
+
+// Memory
+service MemoryMonitoring {
+    rpc GetFreeMemory(google.protobuf.Empty) returns(FreeMemory) {}
+    rpc GetUsedMemory(google.protobuf.Empty) returns(UsedMemory) {}
+    rpc GetCachedMemory(google.protobuf.Empty) returns(CachedMemory) {}
+    rpc GetSwapMemory(google.protobuf.Empty) returns(SwapMemory) {}
+    rpc GetTotalMemory(google.protobuf.Empty) returns(TotalMemory) {}
+}
+
+message FreeMemory {
+    int64 value = 1;
+}
+
+message UsedMemory {
+    int64 value = 1;
+}
+
+message CachedMemory {
+    int64 value = 1;
+}
+
+message SwapMemory {
+    int64 value = 1;
+}
+
+message TotalMemory {
+    int64 value = 1;
+}
+
+// CPU
+service CpuMonitoring {
+    rpc GetUsagePercentage(google.protobuf.Empty) returns (CpuResponse) {}
+}
+
+message CpuResponse {
+    repeated float value = 1;
+}
